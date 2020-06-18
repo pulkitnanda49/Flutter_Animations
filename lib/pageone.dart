@@ -1,134 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:liquid_ui/liquid_ui.dart';
+import 'package:test_animations/description.dart';
+import 'animations/staggered_animation/flutter_staggered_animations.dart';
 
-class PageOne extends StatefulWidget {
-  final Color color;
-  final PageController controller;
-  const PageOne({Key key, this.color, this.controller}) : super(key: key);
-
-  @override
-  _PageOneState createState() => _PageOneState();
-}
-
-class _PageOneState extends State<PageOne> with SingleTickerProviderStateMixin {
-  AnimationController controller;
-  TweenSequenceItem<Offset> start, end;
-  ScrollDirection direction = ScrollDirection.forward;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 1200),
-    );
-
-    setForwardTween();
-
-    widget.controller.addListener(animate);
-  }
-
-  void setForwardTween() {
-    setState(() {
-      start = TweenSequenceItem<Offset>(
-        tween: Tween<Offset>(begin: Offset.zero, end: Offset(40.0, 0.0)),
-        weight: 0.5,
-      );
-
-      end = TweenSequenceItem<Offset>(
-        tween: Tween<Offset>(begin: Offset(40.0, 0.0), end: Offset(0.0, 0.0)),
-        weight: 0.5,
-      );
-    });
-  }
-
-  void setBackwardTween() {
-    setState(() {
-      start = TweenSequenceItem<Offset>(
-        tween: Tween<Offset>(begin: Offset.zero, end: Offset(-40.0, 0.0)),
-        weight: 0.5,
-      );
-
-      end = TweenSequenceItem<Offset>(
-        tween: Tween<Offset>(begin: Offset(-40.0, 0.0), end: Offset(0.0, 0.0)),
-        weight: 0.5,
-      );
-    });
-  }
-
-  void animate() {
-    if (!mounted) return;
-
-    if (widget.controller.position.userScrollDirection != direction) {
-      if (widget.controller.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        setBackwardTween();
-        controller.forward(from: 0.0);
-      } else {
-        setForwardTween();
-        controller.reverse(from: 1.0);
-      }
-      setState(() {
-        direction = widget.controller.position.userScrollDirection;
-      });
-    }
-  }
+class TabFirst extends StatelessWidget {
+  final bool previous;
+  const TabFirst({Key key, this.previous = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      padding: const EdgeInsets.all(40.0),
-      crossAxisCount: 2,
-      childAspectRatio: 0.75,
-      crossAxisSpacing: 15.0,
-      mainAxisSpacing: 15.0,
-      children: List.generate(6, (index) {
-        return AnimatedCard(
-          color: widget.color,
-          controller: controller,
-          start: start,
-          end: end,
-        );
-      }),
-    );
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-}
-
-class AnimatedCard extends AnimatedWidget {
-  final Color color;
-  final TweenSequenceItem<Offset> start, end;
-
-  AnimatedCard({
-    Key key,
-    AnimationController controller,
-    this.color,
-    this.start,
-    this.end,
-  }) : super(key: key, listenable: controller);
-
-  Animation<Offset> get _progress => TweenSequence([start, end])
-      .animate(CurvedAnimation(curve: Curves.ease, parent: listenable));
-
-  @override
-  Widget build(BuildContext context) {
-    return Transform.translate(
-      offset: _progress.value,
-      child: LCard(
-        color: color,
-        elevation: 5.0,
-        image: LCardImage(
-            image: NetworkImage('https://picsum.photos/seed/nature/200/300')),
-        body: LCardBody(
-          title: 'Nature',
-          subTitle: 'random',
+    return AnimationLimiter(
+      child: GridView.builder(
+        itemCount: 10 /*snapShot.data.length*/,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: .8,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
         ),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        itemBuilder: (BuildContext context, int index) {
+          return AnimationConfiguration.staggeredGrid(
+            columnCount: 2,
+            position: index,
+            child: SlideAnimation(
+              horizontalOffset: previous ? -250 : 250,
+              duration: Duration(milliseconds: 600),
+              delay: Duration(milliseconds: 150),
+              child: InkWell(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Description(
+                              index: index,
+                            ))),
+                child: Container(
+                  padding: EdgeInsets.all(5.0),
+                  constraints: BoxConstraints.expand(),
+                  child: Hero(
+                    tag: "$index",
+                    child: LCard(
+                      elevation: 4.0,
+                      image: LCardImage(
+                          image: NetworkImage(
+                              'https://picsum.photos/seed/picsum/200/300')),
+                      body: LCardBody(
+                        title: 'Heading',
+                        subTitle: 'subtitle',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

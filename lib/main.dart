@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:liquid_ui/liquid_ui.dart';
+import 'package:test_animations/description.dart';
 import 'package:test_animations/homepagetoppart.dart';
 import 'package:test_animations/pageone.dart';
 
@@ -8,11 +9,16 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key key}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return LiquidApp(
       materialApp: MaterialApp(
+        routes: {
+          '/home': (context) => MyHomePage(),
+        },
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -66,16 +72,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 children: [
-                  PageOne(
-                    controller: controller,
+                  TabFirst(
+                    previous: false,
                   ),
-                  PageOne(
-                    controller: controller,
-                    color: Colors.blueGrey[100],
+                  TabFirst(
+                    previous: false,
                   ),
-                  PageOne(
-                    controller: controller,
-                    color: Colors.blue[100],
+                  TabFirst(
+                    previous: false,
                   ),
                 ],
               ),
