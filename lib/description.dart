@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:test_animations/descriptionclipper.dart';
+
+import 'clippers/descriptionclipper.dart';
 
 class Description extends StatelessWidget {
   final int index;

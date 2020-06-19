@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:liquid_ui/liquid_ui.dart';
 
 import 'CustomPainter.dart';
-import 'customshapeclipper.dart';
+import 'clippers/customshapeclipper.dart';
 
 class HOmePageTopPart extends StatelessWidget {
   final double progress;

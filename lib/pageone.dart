@@ -15,7 +15,7 @@ class TabFirst extends StatelessWidget {
         itemCount: 10 /*snapShot.data.length*/,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: .8,
+          childAspectRatio: .75,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
         ),

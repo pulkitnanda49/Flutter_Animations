@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:test_animations/customshapeclipper.dart';
 
 class DescriptionClipper extends CustomClipper<Path> {
   Path getInitialPath(Size size) {
